@@ -37,7 +37,8 @@ test2.txt
 用判断树的思想进行词法分析，将token和对应的标签分别用一个vector存起来，使用只读的Edit Control控件输出词法分析结果。使用递归下降分析法实现语法树的分析。使用MFC的CTreeCtrl控件在图形界面实现语法树的输出。  
 
 # 4 测试展示
-![image]()
+![image1](https://github.com/Gao-JF/Mini_C/blob/main/1.png?raw=true)  
+![image2](https://github.com/Gao-JF/Mini_C/blob/main/2.png?raw=true)
 
 
 
