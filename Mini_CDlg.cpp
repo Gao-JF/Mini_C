@@ -207,6 +207,11 @@ void CMiniCDlg::OnBnClickedCompile()
 	edit.GetWindowText(Code);
 	code_text = Code;
 	string str = CT2A(Code.GetBuffer());
+	if (str.length() == 0)//如果不输入就直接编译，返回出错信息
+	{
+		AfxMessageBox(_T("编译失败，请输入代码"));
+		return;
+	}
 	word_analysis wa;
 	wa.get_code(str);
 	wa.scan();
@@ -238,7 +243,7 @@ void CMiniCDlg::OnBnClickedCompile()
 		}
 	};
 	
-	if (ga.get_flag() == 1) //如果没有语法错误，层序遍历树
+	if (ga.get_flag() == 1&&root->child_size()>0) //如果没有语法错误，层序遍历树
 	{
 		m_grammer_analysis_dialog.tree.DeleteAllItems();
 		//显示词法分析结果

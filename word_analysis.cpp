@@ -35,14 +35,14 @@ int word_analysis::scan()
     {
         string word;//存放单词
         //匹配标识符或关键字
-        if(file[i]=='\t'||file[i]==' '||file[i]=='\n'||file[i]=='\r')
+        if(file[i]=='\t'||file[i]==' '||file[i]=='\n'||file[i]=='\r' && i < file.length())
         {
             i++;
             continue;
         }
-        else if(file[i]=='_'||file[i]>='a'&&file[i]<='z'||file[i]>='A'&&file[i]<='Z')
+        else if(file[i]=='_'||file[i]>='a'&&file[i]<='z'||file[i]>='A'&&file[i]<='Z' && i < file.length())
         {
-            while(file[i] != '\r' && file[i]!='\t'&&file[i]!=' '&&file[i]!='\n'&&symbol.find(file[i])==symbol.end()&&file[i]!='!')
+            while(file[i] != '\r' && file[i]!='\t'&&file[i]!=' '&&file[i]!='\n'&&symbol.find(file[i])==symbol.end()&&file[i]!='!'&&i<file.length())
             {
                 word+=file[i++];
             }
@@ -61,7 +61,7 @@ int word_analysis::scan()
         }
 
         //匹配数字
-        else if(((file[i]=='+'||file[i]=='-')&&last==2)||file[i]=='.'||file[i]>='0'&&file[i]<='9')
+        else if(((file[i]=='+'||file[i]=='-')&&last==2)||file[i]=='.'||file[i]>='0'&&file[i]<='9' && i < file.length())
         {
             bool dot=true;//判断是否还能匹配小数点
             bool e=true;//判断是否还能匹配E|e
@@ -71,7 +71,7 @@ int word_analysis::scan()
             {
                 word+=file[i++];
             }
-            while(file[i] != '\r'&&file[i]!='\t'&&file[i]!=' '&&file[i]!='\n'&&symbol.find(file[i])==symbol.end())
+            while(file[i] != '\r'&&file[i]!='\t'&&file[i]!=' '&&file[i]!='\n'&&symbol.find(file[i])==symbol.end() && i < file.length())
             {
                 if(file[i]>='0'&&file[i]<='9')
                 {word+=file[i++];continue;}
@@ -81,7 +81,7 @@ int word_analysis::scan()
                     word+=file[i++];
                     continue;
                 }
-                else if((file[i]=='E'||file[i]=='e')&&e==true&&file[i+1]>='0'&&file[i+1]<='9')
+                else if((file[i]=='E'||file[i]=='e')&&e==true&&file[i+1]>='0'&&file[i+1]<='9' && i < file.length())
                 {
                     e=false;
                     dot=false;
@@ -98,7 +98,7 @@ int word_analysis::scan()
             label.push_back("number");
             last=3;
         }
-        else if(symbol.find(file[i])!=symbol.end()||file[i]=='!')
+        else if(symbol.find(file[i])!=symbol.end()||file[i]=='!' && i < file.length())
         {
             if(file[i]=='<')
             {
@@ -112,7 +112,7 @@ int word_analysis::scan()
                 Token.push_back(word);
                 label.push_back("op");
             }
-            else if(file[i]=='>')
+            else if(file[i]=='>' && i < file.length())
             {
                 word=">";
                 i++;
@@ -124,7 +124,7 @@ int word_analysis::scan()
                 Token.push_back(word);
                 label.push_back("op");
             }
-            else if(file[i]=='=')
+            else if(file[i]=='=' && i < file.length())
             {
                 word="=";
                 i++;
@@ -136,34 +136,34 @@ int word_analysis::scan()
                 Token.push_back(word);
                 label.push_back("op");
             }
-            else if(file[i]=='!')
+            else if(file[i]=='!' && i < file.length())
             {
                 word="!=";
                 i+=2;
                 Token.push_back(word);
                 label.push_back("op");
             }
-            else if(file[i]=='/')
+            else if(file[i]=='/' && i < file.length())
             {
                 word="/";
                 i++;
-                if(file[i]=='*')
+                if(file[i]=='*' && i < file.length())
                 {
                     word+='*';
                     i++;
                     while(1)
                     {
                         word+=file[i++];
-                        if(file[i]=='*')
+                        if(file[i]=='*' && i < file.length())
                         {
                             word+=file[i++];
-                            if(file[i]=='/')
+                            if(file[i]=='/' && i < file.length())
                             {
                                 word+=file[i++];
                                 break;
                             }
                         }
-                        if(i==file.length()-1)
+                        if(i==file.length()-1 )
                         {
                             cout<<"ERROR"<<endl;
                             return 0;
@@ -178,14 +178,14 @@ int word_analysis::scan()
                 label.push_back("op");
                 }
             }
-            else if(file[i]=='*'||file[i]=='+'||file[i]=='-')
+            else if(file[i]=='*'||file[i]=='+'||file[i]=='-' && i < file.length())
             {
                 word=file[i];
                 i++;
                 Token.push_back(word);
                 label.push_back("op");
             }
-            else 
+            else if(i < file.length())
             {
                 word=file[i++];
                 Token.push_back(word);

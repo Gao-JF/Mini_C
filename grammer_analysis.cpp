@@ -67,6 +67,7 @@ grammer_tree* grammer_analysis::match(string t)
     else
     {
         flag = 0;
+        pos++;
         return NULL;
     }
 }
@@ -81,6 +82,8 @@ grammer_tree* grammer_analysis::program(grammer_tree *root)
 /*
     program->declaration_list
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     token=get_Token();
     root=new grammer_tree("start");
     root=declaration_list(root);
@@ -94,6 +97,8 @@ grammer_tree* grammer_analysis::declaration_list(grammer_tree *root)
     declaration_list->declaration declaration_list_1
     declaration_list_1->declaration declaration_list_1 |empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree *c;
     c=new grammer_tree("declaration");
     c=declaration(c);
@@ -107,6 +112,8 @@ grammer_tree* grammer_analysis::declaration_list(grammer_tree *root)
 
 grammer_tree* grammer_analysis::declaration_list_1(grammer_tree *root)
 {
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree *c;
     token=get_Token();
     if( token=="int"|| token=="void")
@@ -126,6 +133,8 @@ grammer_tree* grammer_analysis::simple_declaration(grammer_tree *root)
 /*
     simple_declaration->type_specifier ID
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree *c;
     token=get_Token();
     c=type_specifier();
@@ -141,16 +150,18 @@ grammer_tree* grammer_analysis::declaration(grammer_tree *root)
 /*
     declaration->var_declaration|fun_declaration
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree *c;
     token=get_Token();
-    if(Token[pos+2]==";"||Token[pos+2]=="[")
+    if(pos+2<Token.size()&&(Token[pos+2]==";"||Token[pos+2]=="["))
     {
         c = new grammer_tree("var_declaration");
         c = var_declaration(c);
         if (c->child_size() > 0)
             root->insert_tree(c);
     }
-    else if (Token[pos + 2] == "(")
+    else if (pos + 2 < Token.size() && Token[pos + 2] == "(")
     {
         c = new grammer_tree("fun_declaration");
         c = fun_declaration(c);
@@ -165,6 +176,8 @@ grammer_tree* grammer_analysis::var_declaration(grammer_tree* root)
 /*
     var_declaration->type_specifier ID;|type_specifier ID[NUM];
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     root = simple_declaration(root);
     if (token == ";")
@@ -199,6 +212,8 @@ grammer_tree* grammer_analysis::fun_declaration(grammer_tree* root)
 /*
     fun_declaration->type-specifier ID(params) compound-stmt    
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     root = simple_declaration(root);
 
@@ -229,6 +244,8 @@ grammer_tree* grammer_analysis::type_specifier()
 /*
     type_specifier->int|void
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     if(token=="int")
     {
         token=get_Token();
@@ -246,6 +263,8 @@ grammer_tree* grammer_analysis::params(grammer_tree* root)
 /*
     params->param_list|void
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
 
     if(token=="void")
@@ -280,6 +299,8 @@ grammer_tree* grammer_analysis::param_list(grammer_tree* root)
     param_list->param param_list_1
     param_list_1->,param param_list_1|empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
      grammer_tree* c;
 
      c=new grammer_tree("param");
@@ -293,6 +314,8 @@ grammer_tree* grammer_analysis::param_list(grammer_tree* root)
 
 grammer_tree* grammer_analysis::param_list_1(grammer_tree* root)
 {
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
      grammer_tree* c;
      if(token==",")
      {
@@ -313,6 +336,8 @@ grammer_tree* grammer_analysis::param(grammer_tree* root)
 /*
     param->simple_declaration empty|[]
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
      grammer_tree* c;
 
      root=simple_declaration(root);
@@ -335,6 +360,8 @@ grammer_tree* grammer_analysis::compound_stmt(grammer_tree *root)
 /*
     compound_stmt->{local_declarations statement_list}
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
         grammer_tree* c;
         c=match("{");
         token=get_Token();
@@ -362,6 +389,8 @@ grammer_tree* grammer_analysis::local_declarations(grammer_tree* root)
 /*
     local_declarations->var_declaration local_declarations | empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="int"||token=="void")
     {
@@ -399,8 +428,10 @@ grammer_tree* grammer_analysis::statement_list(grammer_tree* root)
 /*
     statement_list->statement statement-list | empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
      grammer_tree* c;
-     if(label[pos]=="identifier"||token=="{"||token=="if"||token=="while"||token=="return")
+     if(pos<label.size()&&(label[pos]=="identifier"||token=="{"||token=="if"||token=="while"||token=="return"))
      {
         c=new grammer_tree("statement");
         c=statement(c);
@@ -423,8 +454,10 @@ grammer_tree* grammer_analysis::statement(grammer_tree* root)
                 |iteration_stmt
                 |return_stmt    
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
-    if(label[pos]=="identifier")
+    if(pos<label.size()&&label[pos]=="identifier")
     {
         c=new grammer_tree("expression_stmt");
         c=expression_stmt(c);
@@ -473,8 +506,10 @@ grammer_tree* grammer_analysis::expression_stmt(grammer_tree* root)
 /*
     expression_stmt->expression;|;
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
-    if(label[pos]=="identifier")
+    if(pos<label.size()&&label[pos]=="identifier")
     {
         c=new grammer_tree("expression");
         c=expression(c);
@@ -505,6 +540,9 @@ grammer_tree* grammer_analysis::selection_stmt(grammer_tree* root)
 /*
     selection_stmt->if(expression)statement empty|else statement
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
+
     grammer_tree* c;
 
     c=match("if");
@@ -549,6 +587,8 @@ grammer_tree* grammer_analysis::iteration_stmt(grammer_tree* root)
 /*
     iteration_stmt->while(expression)statement
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
 
     c=match("while");
@@ -581,6 +621,8 @@ grammer_tree* grammer_analysis::return_stmt(grammer_tree* root)
 /*
     return_stmt->return;|return expression;
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
 
     c=match("return");
@@ -593,7 +635,7 @@ grammer_tree* grammer_analysis::return_stmt(grammer_tree* root)
         token=get_Token();
         root->insert_tree(c);
     }
-    else if(label[pos]=="identifier")
+    else if(pos<label.size()&&label[pos]=="identifier")
     {
         c=new grammer_tree("expression");
         c=expression(c);
@@ -613,8 +655,10 @@ grammer_tree* grammer_analysis::expression(grammer_tree* root)
 /*
     expression->var=expression|simple_expression
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
-    if(label[pos]=="identifier")
+    if(pos<label.size()&&label[pos]=="identifier")
     {
             int flag=pos;//表示是否回溯
 
@@ -663,7 +707,7 @@ grammer_tree* grammer_analysis::expression(grammer_tree* root)
             }
 
     }
-    if(token=="("||label[pos]=="number")
+    if(token=="("||(pos<label.size()&&label[pos]=="number"))
     {
         c=new grammer_tree("simple_expression");
             c=simple_expression(c);
@@ -678,6 +722,8 @@ grammer_tree* grammer_analysis::var(grammer_tree* root)
 /*
     var->ID|ID[expression]
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     c=match("ID");
     token=get_Token();
@@ -706,6 +752,8 @@ grammer_tree* grammer_analysis::simple_expression(grammer_tree* root)
 /*
     simple_expression->additive_expression empty|relop additive_expression
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
 
     c=new grammer_tree("additive_expression");
@@ -734,6 +782,8 @@ grammer_tree* grammer_analysis::relop(grammer_tree* root)
 /*
     relop-><=|<|>|>=|!=|==
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="<=")
     {
@@ -780,6 +830,8 @@ grammer_tree* grammer_analysis::additive_expression(grammer_tree* root)
     additive_expression->term additive_expression_1
     additive_expression_1->addop term additive_expression_1 | empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     c=new grammer_tree("term");
     c=term(c);
@@ -792,6 +844,8 @@ grammer_tree* grammer_analysis::additive_expression(grammer_tree* root)
 
 grammer_tree* grammer_analysis::additive_expression_1(grammer_tree* root)
 {
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="+"||token=="-")
     {
@@ -815,6 +869,8 @@ grammer_tree* grammer_analysis::addop(grammer_tree* root)
 /*
     addop->+|-
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="+")
     {
@@ -835,6 +891,8 @@ grammer_tree* grammer_analysis::term(grammer_tree* root)
     term->factor term_1
     term_1->mulop factor term_1 |empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
 
     c=new grammer_tree("factor");
@@ -848,6 +906,8 @@ grammer_tree* grammer_analysis::term(grammer_tree* root)
 
 grammer_tree* grammer_analysis::term_1(grammer_tree* root)
 {
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="*"||token=="/")
     {
@@ -871,6 +931,8 @@ grammer_tree* grammer_analysis::mulop(grammer_tree* root)
 /*
     mulop->*|/
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="*")
     {
@@ -890,6 +952,8 @@ grammer_tree* grammer_analysis::factor(grammer_tree* root)
 /*
     factor->(expression)|NUM|   ID empty|[expression]|(args)
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token=="(")
     {
@@ -904,7 +968,7 @@ grammer_tree* grammer_analysis::factor(grammer_tree* root)
         c=match(")");
         root->insert_tree(c);
     }
-    else if(label[pos]=="identifier")
+    else if(pos<label.size()&&label[pos]=="identifier")
     {
         c=match("ID");
         root->insert_tree(c);
@@ -936,7 +1000,7 @@ grammer_tree* grammer_analysis::factor(grammer_tree* root)
             root->insert_tree(c);
         }
     }
-    else if(label[pos]=="number")
+    else if(pos<label.size()&&label[pos]=="number")
     {
         c=match("NUM");
         root->insert_tree(c);
@@ -950,8 +1014,10 @@ grammer_tree* grammer_analysis::args(grammer_tree* root)
 /*
     args->arg_list|empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
-    if(label[pos]=="identifier")
+    if(pos<label.size()&&label[pos]=="identifier")
     {
         c=new grammer_tree("arg_list");
         c=arg_list(c);
@@ -967,6 +1033,8 @@ grammer_tree* grammer_analysis::arg_list(grammer_tree* root)
     arg_list->expression arg_list_1
     arg_list_1->,expression arg_list_1 | empty
 */
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     c=new grammer_tree("expression");
     c=expression(c);
@@ -980,6 +1048,8 @@ grammer_tree* grammer_analysis::arg_list(grammer_tree* root)
 
 grammer_tree* grammer_analysis::arg_list_1(grammer_tree* root)
 {
+    if (flag == 0)  //如果已经出现错误，那么直接返回
+        return root;
     grammer_tree* c;
     if(token==",")
     {
