@@ -39,6 +39,8 @@ test2.txt
 # 4 测试展示
 ![image1](https://github.com/Gao-JF/Mini_C/blob/main/1.png?raw=true)  
 ![image2](https://github.com/Gao-JF/Mini_C/blob/main/2.png?raw=true)
+![image2](https://github.com/Gao-JF/Mini_C/blob/main/3.png?raw=true)
+![image2](https://github.com/Gao-JF/Mini_C/blob/main/4.png?raw=true)
 
 
 
