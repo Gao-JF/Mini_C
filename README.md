@@ -1,5 +1,6 @@
 # Mini_C
-简单的类C语言编译器
+简单的类C语言编译器  
+github https://github.com/Gao-JF/Mini_C
 # 1 目录结构  
 ## 1.1 头文件  
 ### 1.1.1 MFC框架头文件  
