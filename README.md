@@ -10,7 +10,8 @@ Mini_CDlg.h  程序主对话框的类
 Resource.h  MFC资源文件  
 targetver.h  MFC框架文件  
 grammer_analysis_dialog.h  输出语法树的子对话框的类  
-word_analysis_dialog.h  输出词法分析结果的子对话框的类  
+word_analysis_dialog.h  输出词法分析结果的子对话框的类
+semantic_analysis_dialog.h 输出语义分析结果的子对话框的类
 
 ### 1.1.2 自创头文件  
 word_analysis  词法分析类  
@@ -20,29 +21,28 @@ grammer_analysis  语法分析类
 ### 1.2.1 MFC实现文件  
 grammer_analysis_dialog.cpp  此文件是显示语法树的子对话框的实现文件  
 word_analysis_dialog.cpp  此文件是显示词法分析结果的子对话框的实现文件  
+semantic_analysis_dialog.cpp  此文件是显示语义分析结果的子对话框的实现文件  
 Mini_C.cpp  定义应用程序的类行为  
 Mini_CDlg.cpp  此类是主对话框的实现文件  
 
 ### 1.2.2 自创头文件的实现文件
 word_analysis.cpp  词法分析实现  
-grammer_analysis.cpp  语法分析实现  
+grammer_analysis.cpp  语法分析、语义分析实现  
 
 ## 1.3 测试文件  
-test2.txt  
+正例.txt  
+反例.txt  
+
 **在Mini_CDlg.cpp文件运行代码**
 
 # 2 已完成的功能  
 词法分析：把代码中的单词提取出来，并且能够识别它对应的类型。  
 语法分析：输出语法树  
+语义分析：输出符号表、类型检查与语义错误检查、中间代码生成
 
 # 3 实现思路  
-用判断树的思想进行词法分析，将token和对应的标签分别用一个vector存起来，使用只读的Edit Control控件输出词法分析结果。使用递归下降分析法实现语法树的分析。使用MFC的CTreeCtrl控件在图形界面实现语法树的输出。  
+用判断树的思想进行词法分析，将token和对应的标签分别用一个vector存起来，使用只读的Edit Control控件输出词法分析结果。使用递归下降分析法实现语法树的分析。使用MFC的CTreeCtrl控件在图形界面实现语法树的输出。然后在语法树生成的过程中加入语义动作，完成语义分析。
 
-# 4 测试展示
-![image1](https://github.com/Gao-JF/Mini_C/blob/main/1.png?raw=true)  
-![image2](https://github.com/Gao-JF/Mini_C/blob/main/2.png?raw=true)
-![image2](https://github.com/Gao-JF/Mini_C/blob/main/3.png?raw=true)
-![image2](https://github.com/Gao-JF/Mini_C/blob/main/4.png?raw=true)
 
 
 
